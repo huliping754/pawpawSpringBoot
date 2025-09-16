@@ -1,0 +1,2 @@
+-- 修改 costs 表，让 id 字段自动递增
+ALTER TABLE costs MODIFY COLUMN id BIGINT NOT NULL AUTO_INCREMENT;
