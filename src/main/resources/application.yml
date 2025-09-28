@@ -5,21 +5,25 @@ wx:
 
 server:
   address: 0.0.0.0
-  port: 8080
+  port: 8081
   servlet:
     context-path: /
 
 spring:
-  profiles:
-    active: prod
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://db.bvhwswzakoowoaexqciq.supabase.co:5432/postgres?sslmode=require
-    username: postgres
-    password: ${DB_PASSWORD:fqcqsqcj22}
+    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres
+    username: postgres.bvhwswzakoowoaexqciq
+    password: TRjarykDUYrDOJQ8
     hikari:
       maximum-pool-size: 5
       minimum-idle: 1
+# spring:
+#   datasource:
+#     driver-class-name: com.mysql.cj.jdbc.Driver
+#     url: jdbc:mysql://localhost:3306/pawpaw?useUnicode=true&characterEncoding=utf-8
+#     username: root
+#     password: fqcqsqcj22
   servlet:
     multipart:
       max-file-size: 10MB
