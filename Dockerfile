@@ -1,5 +1,6 @@
 # 简化版本 - 专门为微信云托管优化
-FROM openjdk:17-jre-slim
+# FROM openjdk:17-jre-slim
+FROM openjdk:17-jdk-slim
 
 # 设置时区
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
