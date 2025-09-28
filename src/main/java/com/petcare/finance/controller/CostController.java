@@ -31,22 +31,10 @@ public class CostController {
         return ApiResponse.success(costService.save(cost));
     }
 
-    @Operation(summary = "更新成本记录", description = "修改成本支出记录")
-    @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody Cost cost) {
-        return ApiResponse.success(costService.updateById(cost));
-    }
-
     @Operation(summary = "删除成本记录", description = "根据ID删除成本记录")
     @DeleteMapping("/{id}")
     public ApiResponse<Boolean> delete(@Parameter(description = "成本记录ID") @PathVariable Long id) {
         return ApiResponse.success(costService.removeById(id));
-    }
-
-    @Operation(summary = "获取成本详情", description = "根据ID查询单个成本记录")
-    @GetMapping("/{id}")
-    public ApiResponse<Cost> get(@Parameter(description = "成本记录ID") @PathVariable Long id) {
-        return ApiResponse.success(costService.getById(id));
     }
 
     @Operation(summary = "查询成本记录", description = "支持按月份查询成本记录")

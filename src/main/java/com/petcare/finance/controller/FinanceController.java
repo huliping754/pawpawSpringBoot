@@ -93,27 +93,6 @@ public class FinanceController {
         return ApiResponse.success(stats);
     }
     
-    @Operation(summary = "年度财务汇总", description = "统计指定年度的财务汇总数据，包括总收入、净利润等")
-    @GetMapping("/yearly-summary")
-    public ApiResponse<TotalFinanceStats> getYearlySummary(
-            @Parameter(description = "统计年份", example = "2025") @RequestParam String year) {
-        
-        // 1. 计算该年度的总收入（使用incomes表的数据）
-        BigDecimal totalIncome = calculateYearlyIncomeFromIncomes(year);
-        
-        // 2. 计算该年度的总成本
-        BigDecimal totalCost = calculateYearlyCost(year);
-        
-        // 3. 计算该年度的总利润
-        BigDecimal totalProfit = totalIncome.subtract(totalCost);
-        
-        TotalFinanceStats stats = new TotalFinanceStats();
-        stats.setTotalIncome(totalIncome);
-        stats.setTotalCost(totalCost);
-        stats.setTotalProfit(totalProfit);
-        
-        return ApiResponse.success(stats);
-    }
     
     @Operation(summary = "月度订单统计", description = "统计不同月份的订单数和总收入，跨月订单会在对应月份都计算")
     @GetMapping("/monthly-orders")
@@ -306,28 +285,6 @@ public class FinanceController {
         return ApiResponse.success(response);
     }
     
-    /**
-     * 计算总收入（所有宠物订单）
-     */
-    private BigDecimal calculateTotalIncome() {
-        // 查询所有宠物订单
-        List<Pet> pets = petService.list();
-        
-        BigDecimal totalIncome = BigDecimal.ZERO;
-        
-        for (Pet pet : pets) {
-            // 计算寄养天数（按过夜计算）
-            long days = java.time.temporal.ChronoUnit.DAYS.between(pet.getStartDate(), pet.getEndDate());
-            
-            // 计算该订单的总收入
-            BigDecimal dailyIncome = pet.getDailyFee().multiply(BigDecimal.valueOf(days));
-            BigDecimal orderTotal = dailyIncome.add(pet.getOtherFee());
-            
-            totalIncome = totalIncome.add(orderTotal);
-        }
-        
-        return totalIncome;
-    }
     
     /**
      * 从incomes表计算总收入（确保与宠物详情一致）
@@ -347,47 +304,6 @@ public class FinanceController {
         return totalIncome;
     }
     
-    /**
-     * 从incomes表计算指定年度的总收入
-     */
-    private BigDecimal calculateYearlyIncomeFromIncomes(String year) {
-        // 查询指定年度的所有收入记录
-        LambdaQueryWrapper<Income> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Income::getCreatedAt, year); // 根据创建时间筛选年份
-        
-        List<Income> incomes = incomeService.list(queryWrapper);
-        
-        BigDecimal totalIncome = BigDecimal.ZERO;
-        
-        for (Income income : incomes) {
-            if (income.getTotalAmount() != null) {
-                totalIncome = totalIncome.add(income.getTotalAmount());
-            }
-        }
-        
-        return totalIncome;
-    }
-    
-    /**
-     * 计算指定年度的总成本
-     */
-    private BigDecimal calculateYearlyCost(String year) {
-        // 查询指定年度的所有成本记录
-        LambdaQueryWrapper<Cost> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Cost::getCostMonth, year); // 根据成本月份筛选年份
-        
-        List<Cost> costs = costService.list(queryWrapper);
-        
-        BigDecimal totalCost = BigDecimal.ZERO;
-        
-        for (Cost cost : costs) {
-            if (cost.getTotalCost() != null) {
-                totalCost = totalCost.add(cost.getTotalCost());
-            }
-        }
-        
-        return totalCost;
-    }
     
     /**
      * 计算总成本（所有成本记录）

@@ -13,7 +13,6 @@ D:\project\pawpawspringboot\src\main\java\com\petcare\finance\service\IncomeServ
 D:\project\pawpawspringboot\src\main\java\com\petcare\pet\service\impl\PetServiceImpl.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\system\service\SettingService.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\common\config\MybatisPlusConfig.java
-D:\project\pawpawspringboot\src\main\java\com\petcare\finance\controller\IncomeController.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\system\controller\SettingController.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\finance\mapper\PetIncomeMapper.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\finance\service\impl\IncomeServiceImpl.java
@@ -22,7 +21,6 @@ D:\project\pawpawspringboot\src\main\java\com\petcare\system\service\impl\Settin
 D:\project\pawpawspringboot\src\main\java\com\petcare\pet\model\Pet.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\common\web\GlobalExceptionHandler.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\finance\service\impl\CostServiceImpl.java
-D:\project\pawpawspringboot\src\main\java\com\petcare\finance\controller\ReportController.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\finance\model\vo\PetIncomeVO.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\pet\model\vo\PetListResponse.java
 D:\project\pawpawspringboot\src\main\java\com\petcare\common\model\BaseEntity.java

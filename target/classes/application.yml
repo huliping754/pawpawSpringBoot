@@ -10,37 +10,30 @@ server:
     context-path: /
 
 spring:
+  profiles:
+    active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pawpaw?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: fqcqsqcj22
-    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:pawpaw}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
     hikari:
-      minimum-idle: 5
-      maximum-pool-size: 15
-      auto-commit: true
-      idle-timeout: 30000
-      pool-name: HikariCP
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-  transaction:
-    rollback-on-commit-failure: true
-    default-timeout: 30
-  mvc:
-    static-path-pattern: /images/**
-  web:
-    resources:
-      static-locations: classpath:/static/,file:${file.upload.path}
+      maximum-pool-size: 10
+      minimum-idle: 2
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      enabled: true
+  jackson:
+    time-zone: Asia/Shanghai
+
+# 生产环境日志配置
+logging:
+  level:
+    com.petcare: INFO
+    org.springframework: WARN
+  file:
+    name: /app/logs/application.log
 
 mybatis-plus:
   configuration:
@@ -58,11 +51,3 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   packages-to-scan: com.petcare
-
-file:
-  upload:
-    path: D:/fig_storage
-  access:
-    url: http://172.20.10.12:8080/images
-
-

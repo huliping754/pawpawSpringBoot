@@ -15,7 +15,6 @@ com\petcare\pet\model\vo\PetListResponse.class
 com\petcare\finance\service\impl\CostServiceImpl.class
 com\petcare\pet\controller\PetController.class
 com\petcare\system\mapper\SettingMapper.class
-com\petcare\finance\controller\IncomeController.class
 com\petcare\finance\service\CostService.class
 com\petcare\common\config\MybatisPlusConfig.class
 com\petcare\finance\mapper\IncomeMapper.class
@@ -32,7 +31,6 @@ com\petcare\finance\controller\FinanceController$MonthlySummary.class
 com\petcare\finance\service\impl\IncomeServiceImpl.class
 com\petcare\common\config\SwaggerConfig.class
 com\petcare\finance\mapper\CostMapper.class
-com\petcare\finance\controller\ReportController.class
 com\petcare\pet\mapper\PetMapper.class
 com\petcare\common\model\BaseEntity.class
 com\petcare\common\web\GlobalExceptionHandler.class

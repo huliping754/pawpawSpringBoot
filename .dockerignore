@@ -1,0 +1,8 @@
+# 精简版本 - 云托管优化
+target/
+.idea/
+.vscode/
+.git/
+*.log
+logs/
+.DS_Store

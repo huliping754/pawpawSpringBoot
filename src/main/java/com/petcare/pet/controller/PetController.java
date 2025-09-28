@@ -1,14 +1,9 @@
 package com.petcare.pet.controller;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.petcare.common.web.ApiResponse;
-import com.petcare.finance.mapper.PetIncomeMapper;
 import com.petcare.finance.model.Income;
-import com.petcare.finance.model.vo.PetIncomeVO;
 import com.petcare.finance.service.IncomeService;
 import com.petcare.pet.model.Pet;
 import com.petcare.pet.model.vo.PetListResponse;
@@ -18,14 +13,10 @@ import com.petcare.system.model.Setting;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -43,13 +34,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/pets")
 public class PetController {
     private final PetService petService;
-    private final PetIncomeMapper petIncomeMapper;
     private final IncomeService incomeService;
     private final SettingMapper settingMapper;
 
-    public PetController(PetService petService, PetIncomeMapper petIncomeMapper, IncomeService incomeService, SettingMapper settingMapper) {
+    public PetController(PetService petService, IncomeService incomeService, SettingMapper settingMapper) {
         this.petService = petService;
-        this.petIncomeMapper = petIncomeMapper;
         this.incomeService = incomeService;
         this.settingMapper = settingMapper;
     }
@@ -163,56 +152,6 @@ public class PetController {
         return ApiResponse.fail("离店操作失败");
     }
 
-    @Operation(summary = "导出宠物数据", description = "将宠物数据导出为Excel文件")
-    @GetMapping("/export")
-    public void export(HttpServletResponse response,
-                       @Parameter(description = "单个状态筛选", example = "booked") @RequestParam(required = false) String status,
-                       @Parameter(description = "多个状态筛选(逗号分隔)", example = "booked,checkedIn") @RequestParam(required = false) String statuses,
-                       @Parameter(description = "开始日期筛选", example = "2025-09-01") @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                       @Parameter(description = "结束日期筛选", example = "2025-09-30") @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
-        LambdaQueryWrapper<Pet> qw = new LambdaQueryWrapper<Pet>();
-        if (status != null && !status.isEmpty()) {
-            qw.eq(Pet::getStatus, status);
-        }
-        if (statuses != null && !statuses.isEmpty()) {
-            String[] arr = statuses.split(",");
-            qw.in(Pet::getStatus, Arrays.asList(arr));
-        }
-        if (startDate != null) qw.ge(Pet::getStartDate, startDate);
-        if (endDate != null) qw.le(Pet::getEndDate, endDate);
-
-        List<Pet> list = petService.list(qw);
-
-        ExcelWriter writer = ExcelUtil.getWriter(true);
-        writer.addHeaderAlias("id", "编号");
-        writer.addHeaderAlias("name", "姓名");
-        writer.addHeaderAlias("breed", "品种");
-        writer.addHeaderAlias("gender", "性别");
-        writer.addHeaderAlias("age", "年龄");
-        writer.addHeaderAlias("neutered", "绝育");
-        writer.addHeaderAlias("startDate", "开始日期");
-        writer.addHeaderAlias("endDate", "结束日期");
-        writer.addHeaderAlias("dailyFee", "每日费用");
-        writer.addHeaderAlias("otherFee", "其他费用");
-        writer.addHeaderAlias("remark", "备注");
-        writer.addHeaderAlias("status", "状态");
-        writer.addHeaderAlias("createdAt", "创建时间");
-        writer.addHeaderAlias("updatedAt", "更新时间");
-
-        writer.write(list, true);
-
-        String fileName = ("pets-" + DateUtil.format(DateUtil.date(), "yyyyMMdd-HHmmss") + ".xlsx");
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("UTF-8");
-        String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + encoded);
-
-        try (ServletOutputStream out = response.getOutputStream()) {
-            writer.flush(out, true);
-        } finally {
-            writer.close();
-        }
-    }
 
     @Operation(summary = "查询容量状态", description = "查询指定日期的宠物容量使用情况，自动从配置表获取最大容量，包含已入住和已预约的宠物姓名")
     @GetMapping("/capacity")
@@ -262,18 +201,6 @@ public class PetController {
         return ApiResponse.success(resp);
     }
 
-    @Operation(summary = "查询宠物收入详情", description = "根据宠物ID查询该宠物的收入记录详情")
-    @GetMapping("/{id}/income")
-    public ApiResponse<PetIncomeVO> getPetIncome(@Parameter(description = "宠物ID") @PathVariable Long id) {
-        PetIncomeVO result = petIncomeMapper.selectPetIncomeByPetId(id);
-        return ApiResponse.success(result);
-    }
-
-    @Operation(summary = "批量同步宠物到收入表", description = "将所有宠物数据同步到收入表，自动计算总金额")
-    @PostMapping("/sync-income")
-    public ApiResponse<Boolean> syncAllToIncome() {
-        return ApiResponse.success(petService.syncAllPetsToIncome());
-    }
 
     /**
      * 计算并设置宠物的寄养天数、总费用和已入账金额（按过夜计算）
