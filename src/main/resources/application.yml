@@ -13,13 +13,13 @@ spring:
   profiles:
     active: prod
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:pawpaw}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://db.bvhwswzakoowoaexqciq.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: ${DB_PASSWORD:fqcqsqcj22}
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
+      maximum-pool-size: 5
+      minimum-idle: 1
   servlet:
     multipart:
       max-file-size: 10MB

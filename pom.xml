@@ -27,11 +27,21 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+
+
+        <!-- 移除 MySQL 依赖 -->
+<!-- <dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <scope>runtime</scope>
+</dependency> -->
+
+<!-- 添加 PostgreSQL 依赖 -->
+           <dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <scope>runtime</scope>
+           </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>
