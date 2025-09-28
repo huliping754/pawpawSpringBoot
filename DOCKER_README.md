@@ -54,6 +54,8 @@ docker run -p 8080:8080 petcare-admin:latest
 | `DB_NAME` | 数据库名称 | pawpaw |
 | `DB_USERNAME` | 数据库用户名 | root |
 | `DB_PASSWORD` | 数据库密码 | your-password |
+| `WX_APPID` | 微信小程序AppID | wx44eeb1168aa74f2c |
+| `WX_SECRET` | 微信小程序Secret | your-wx-secret |
 
 ## 🌐 服务访问
 
@@ -119,10 +121,14 @@ spring:
 
 ## 🔒 安全建议
 
-1. **环境变量**: 敏感信息使用环境变量配置
-2. **数据库**: 使用云数据库服务
+1. **环境变量**: 所有敏感信息必须使用环境变量配置
+   - 数据库密码：`DB_PASSWORD`
+   - 微信小程序密钥：`WX_SECRET`
+   - 其他API密钥和令牌
+2. **数据库**: 使用云数据库服务，避免本地数据库
 3. **HTTPS**: 云托管自动提供HTTPS支持
 4. **日志**: 避免在日志中输出敏感信息
+5. **代码审查**: 确保代码中不包含硬编码的敏感信息
 
 ## 🆘 技术支持
 

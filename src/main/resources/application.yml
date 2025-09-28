@@ -1,7 +1,7 @@
 wx:
   miniapp:
-    appid: wx44eeb1168aa74f2c
-    secret: 7d5cb44997e71caae676f0c735c78003
+    appid: ${WX_APPID}
+    secret: ${WX_SECRET}
 
 server:
   address: 0.0.0.0
