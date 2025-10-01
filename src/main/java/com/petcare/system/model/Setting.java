@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Schema(description = "系统配置")
 public class Setting {
     @TableId
-    @TableField("`key`")  // 使用反引号包围key字段，因为key是MySQL保留关键字
+    @TableField("\"key\"")  // PostgreSQL使用双引号转义关键字列名
     @Schema(description = "配置键", example = "max_capacity")
     private String key;
     
