@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Arrays;
@@ -199,6 +200,57 @@ public class PetController {
         resp.put("bookedPetNames", bookedPetNames);
         resp.put("checkedInPetNames", checkedInPetNames);
         return ApiResponse.success(resp);
+    }
+
+    @Operation(summary = "查询某月每日容量状态", description = "按月份一次性返回该月每天的容量使用情况，包含预约与在住数量及可用容量")
+    @GetMapping("/capacity/month")
+    public ApiResponse<Map<String, Object>> capacityByMonth(
+            @Parameter(description = "月份，格式 yyyy-MM", example = "2025-10") @RequestParam String month) {
+
+        YearMonth ym = YearMonth.parse(month);
+        LocalDate monthStart = ym.atDay(1);
+        LocalDate monthEnd = ym.atEndOfMonth();
+
+        int maxCapacity = getMaxCapacityFromSettings();
+
+        // 一次查询出与该月有交集的所有预约与在住订单
+        LambdaQueryWrapper<Pet> overlapQw = new LambdaQueryWrapper<Pet>()
+                .le(Pet::getStartDate, monthEnd)
+                .ge(Pet::getEndDate, monthStart)
+                .in(Pet::getStatus, Arrays.asList("booked", "checkedIn"));
+        List<Pet> overlappedPets = petService.list(overlapQw);
+
+        // 为该月每天统计容量
+        List<Map<String, Object>> days = new java.util.ArrayList<>();
+        for (int d = 1; d <= ym.lengthOfMonth(); d++) {
+            LocalDate day = ym.atDay(d);
+
+            long bookedCount = overlappedPets.stream()
+                    .filter(p -> "booked".equals(p.getStatus()))
+                    .filter(p -> !p.getStartDate().isAfter(day) && !p.getEndDate().isBefore(day))
+                    .count();
+
+            long checkedInCount = overlappedPets.stream()
+                    .filter(p -> "checkedIn".equals(p.getStatus()))
+                    .filter(p -> !p.getStartDate().isAfter(day) && !p.getEndDate().isBefore(day))
+                    .count();
+
+            long occupied = bookedCount + checkedInCount;
+            long available = Math.max(0, (long) maxCapacity - occupied);
+
+            Map<String, Object> item = new HashMap<>();
+            item.put("date", day.toString());
+            item.put("bookedCount", bookedCount);
+            item.put("checkedInCount", checkedInCount);
+            item.put("availableCount", available);
+            days.add(item);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("month", month);
+        result.put("maxCapacity", maxCapacity);
+        result.put("days", days);
+        return ApiResponse.success(result);
     }
 
 
