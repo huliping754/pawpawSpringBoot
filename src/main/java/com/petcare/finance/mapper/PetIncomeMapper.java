@@ -36,6 +36,7 @@ public interface PetIncomeMapper extends BaseMapper<Object> {
             "  i.id as incomeId, " +
             "  i.daily_fee as dailyFee, " +
             "  i.other_fee as otherFee, " +
+            "  i.total_fee as totalFee, " +
             "  i.total_amount as totalAmount, " +
             "  i.days_stayed as daysStayed, " +
             "  i.settled_amount as settledAmount, " +
@@ -66,6 +67,7 @@ public interface PetIncomeMapper extends BaseMapper<Object> {
             "  i.id as incomeId, " +
             "  i.daily_fee as dailyFee, " +
             "  i.other_fee as otherFee, " +
+            "  i.total_fee as totalFee, " +
             "  i.total_amount as totalAmount, " +
             "  i.days_stayed as daysStayed, " +
             "  i.settled_amount as settledAmount, " +

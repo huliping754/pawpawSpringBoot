@@ -29,6 +29,9 @@ public class Income extends BaseEntity {
     @Schema(description = "其他费用", example = "20.00")
     private BigDecimal otherFee;
     
+    @Schema(description = "总费用(前端传入的原始总价)", example = "300.00")
+    private BigDecimal totalFee;
+
     @Schema(description = "总金额", example = "260.00")
     private BigDecimal totalAmount;
     

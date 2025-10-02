@@ -42,6 +42,9 @@ public class PetIncomeVO {
     @Schema(description = "其他费用")
     private BigDecimal otherFee;
 
+    @Schema(description = "总费用(前端传入的原始总价)")
+    private BigDecimal totalFee;
+
     @Schema(description = "总金额")
     private BigDecimal totalAmount;
 
