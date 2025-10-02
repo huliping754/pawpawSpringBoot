@@ -267,12 +267,14 @@ public class PetController {
             pet.setStayDays(0);
         }
         
-        // 查询已入账金额和总金额（从incomes表获取准确数据）
+        // 查询已入账金额、原始总价(totalFee)与总金额（从incomes表获取准确数据）
         BigDecimal settledAmount = getSettledAmountByPetId(pet.getId());
         BigDecimal totalAmount = getTotalAmountByPetId(pet.getId());
+        BigDecimal totalFee = getTotalFeeByPetId(pet.getId());
         
         pet.setSettledAmount(settledAmount);
         pet.setTotalAmount(totalAmount);
+        pet.setTotalFee(totalFee);
     }
     
     /**
@@ -339,6 +341,32 @@ public class PetController {
         }
         
         return BigDecimal.ZERO;
+    }
+    
+    /**
+     * 根据宠物ID查询前端传入的原始总价(totalFee)
+     */
+    private BigDecimal getTotalFeeByPetId(Long petId) {
+        if (petId == null) {
+            return null;
+        }
+        try {
+            com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<Income> qw =
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
+            qw.eq(Income::getPetId, petId);
+            List<Income> incomes = incomeService.list(qw);
+            if (!incomes.isEmpty()) {
+                // 若存在多条，取第一条非空值；也可按时间排序后取最新一条
+                for (Income income : incomes) {
+                    if (income.getTotalFee() != null) {
+                        return income.getTotalFee();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("查询totalFee失败: " + e.getMessage());
+        }
+        return null;
     }
     
 
