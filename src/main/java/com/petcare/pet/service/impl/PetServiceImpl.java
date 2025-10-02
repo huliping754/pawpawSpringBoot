@@ -49,6 +49,9 @@ public class PetServiceImpl extends ServiceImpl<PetMapper, Pet> implements PetSe
         if (existing != null) {
             existing.setDailyFee(pet.getDailyFee());
             existing.setOtherFee(pet.getOtherFee());
+            if (pet.getTotalFee() != null) {
+                existing.setTotalFee(pet.getTotalFee());
+            }
             existing.setDaysStayed((int) overnightDays);
             existing.setTotalAmount(total);
             existing.setRemark(pet.getRemark());
@@ -60,6 +63,7 @@ public class PetServiceImpl extends ServiceImpl<PetMapper, Pet> implements PetSe
             income.setPetId(pet.getId());
             income.setDailyFee(pet.getDailyFee());
             income.setOtherFee(pet.getOtherFee());
+            income.setTotalFee(pet.getTotalFee());
             income.setDaysStayed((int) overnightDays);
             income.setTotalAmount(total);
             income.setSettledAmount(BigDecimal.ZERO);
@@ -106,6 +110,7 @@ public class PetServiceImpl extends ServiceImpl<PetMapper, Pet> implements PetSe
         income.setPetId(pet.getId());
         income.setDailyFee(pet.getDailyFee());
         income.setOtherFee(pet.getOtherFee());
+        income.setTotalFee(pet.getTotalFee());
         income.setDaysStayed((int) overnightDays);
         income.setTotalAmount(totalAmount);
         income.setSettledAmount(BigDecimal.ZERO); // 初始未结算
@@ -180,6 +185,8 @@ public class PetServiceImpl extends ServiceImpl<PetMapper, Pet> implements PetSe
                 if (hasTotalFee) {
                     System.out.println("使用totalFee计算: " + pet.getTotalFee() + " + " + (useOtherFee != null ? useOtherFee : BigDecimal.ZERO));
                     totalAmount = pet.getTotalFee().add(useOtherFee != null ? useOtherFee : BigDecimal.ZERO);
+                    // 显式记录原始总价
+                    existingIncome.setTotalFee(pet.getTotalFee());
                 } else {
                     System.out.println("使用日均费用计算: " + useDailyFee + " × " + overnightDays + " + " + (useOtherFee != null ? useOtherFee : BigDecimal.ZERO));
                     totalAmount = (useDailyFee != null ? useDailyFee : BigDecimal.ZERO)
