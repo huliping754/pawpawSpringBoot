@@ -267,7 +267,7 @@ public class PetController {
             pet.setStayDays(0);
         }
         
-        // 查询已入账金额、原始总价(totalFee)与总金额（从incomes表获取准确数据）
+        // 查询已入账金额、寄养费用(totalFee)与总金额（从incomes表获取准确数据）
         BigDecimal settledAmount = getSettledAmountByPetId(pet.getId());
         BigDecimal totalAmount = getTotalAmountByPetId(pet.getId());
         BigDecimal totalFee = getTotalFeeByPetId(pet.getId());
@@ -344,7 +344,7 @@ public class PetController {
     }
     
     /**
-     * 根据宠物ID查询前端传入的原始总价(totalFee)
+     * 根据宠物ID查询前端传入的寄养费用(totalFee)
      */
     private BigDecimal getTotalFeeByPetId(Long petId) {
         if (petId == null) {

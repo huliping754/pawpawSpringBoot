@@ -46,6 +46,9 @@ public class Pet extends BaseEntity {
     
     @Schema(description = "每日费用", example = "120.00")
     private BigDecimal dailyFee;
+
+   @Schema(description = "寄养费用", example = "300.00")
+    private BigDecimal totalFee;
     
     @Schema(description = "其他费用", example = "20.00")
     private BigDecimal otherFee;
@@ -76,10 +79,10 @@ public class Pet extends BaseEntity {
     @Schema(description = "前端传入的已收入金额（用于更新settledAmount）", example = "200.00")
     private BigDecimal inputSettledAmount;
     
-    // 临时字段：前端传入的寄养总费用（如果传入则使用此值计算总费用）
-    @TableField(exist = false)  // 标记此字段不存在于数据库表中
-    @Schema(description = "前端传入的寄养总费用（如果传入则使用此值计算总费用）", example = "300.00")
-    private BigDecimal totalFee;
+    // 临时字段：前端传入的寄养总费用（如果传入则使用此值计算总费用）  数据库以及添加了此字段，不再是临时字段了！
+    // @TableField(exist = false)  // 标记此字段不存在于数据库表中
+    // @Schema(description = "前端传入的寄养总费用（如果传入则使用此值计算总费用）", example = "300.00")
+    // private BigDecimal totalFee;
 }
 
 
